@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Fri Jan  3 11:06:24 2020
+Created on Fri Jan  3 11:38:02 2020
 
 @author: MIWWGE
 """
@@ -8,7 +8,7 @@ Created on Fri Jan  3 11:06:24 2020
 import pandas as pd
 from datetime import datetime
 
-class random_puller:
+class RandomPuller:
     def load_data(self, file_name):
         self.data = pd.read_excel(file_name, header=None)
 

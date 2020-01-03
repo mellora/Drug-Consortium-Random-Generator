@@ -6,7 +6,7 @@ Created on Fri Jan  3 10:59:28 2020
 """
 
 import os
-import RandomPuller
+import random_puller
 
 os.chdir(os.path.normpath("D:/Spyder/DrugConsortiumData"))
 
