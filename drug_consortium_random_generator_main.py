@@ -14,6 +14,7 @@ from datetime import datetime
 
 class DrugConsortiumRandomPuller:
     def __init__(self):
+        self.file_types = (("Text Document", "*.txt"), ("All Files", "*.*"))
         self.win = tk.Tk()
         self.win.title("Drug Consortium")
         self.win.resizable(False, False)
@@ -25,19 +26,26 @@ class DrugConsortiumRandomPuller:
         self.win.destroy()
         exit()
 
+    def save_output_to_file(self):
+        file_save = os.path.normpath(filedialog.asksaveasfilename(initialdir=os.getcwd(), title="Save Pulled Population", filetypes=self.file_types, defaultextension=self.file_types))
+        test = ["LIST PULLED AT:", self.pulled_time, "\nRANDOMS PULLED:"] + self.pulled_randoms + ["\nALTERNATES PULLED:"] + self.pulled_alternates
+        with open(file_save, "w") as file:
+            file.writelines("%s\n" % line for line in test)
+
     def get_data_from_file(self):
-        self.file_data = pd.read_excel(os.path.normpath(filedialog.askopenfilename(initialdir="C:/", title="Select File", filetypes=(("Excel Files", "*.xlsx"), ("All Files", "*.*")))), header=None)
+        self.file_data = pd.read_excel(os.path.normpath(filedialog.askopenfilename(initialdir=os.getcwd(), title="Select File", filetypes=(("Excel Files", "*.xlsx"), ("All Files", "*.*")))), header=None)
         self.label_pop_size.configure(text=f"There Are {self.file_data.size} Employees in this list")
 
     def pull_randoms(self):
         num_rand = int(self.spin_random.get())
         num_alt = int(self.spin_alternate.get())
         sampled_pop = self.file_data.sample(num_rand + num_alt)
-        pulled_randoms = sampled_pop.iloc[:num_rand][0].values.tolist()
-        pulled_alternates = sampled_pop.iloc[num_rand:][0].values.tolist()
-        self.label_random.configure(text="Randoms Pulled:\n" + "\n".join(pulled_randoms))
-        self.label_alternate.configure(text="Alternates Pulled:\n" + "\n".join(pulled_alternates))
-        self.label_timestamp.configure(text="Time List Was Pulled: " + datetime.now().strftime("%d/%m/%Y %H:%M:%S"))
+        self.pulled_randoms = sampled_pop.iloc[:num_rand][0].values.tolist()
+        self.pulled_alternates = sampled_pop.iloc[num_rand:][0].values.tolist()
+        self.pulled_time = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+        self.label_random.configure(text="Randoms Pulled:\n" + "\n".join(self.pulled_randoms))
+        self.label_alternate.configure(text="Alternates Pulled:\n" + "\n".join(self.pulled_alternates))
+        self.label_timestamp.configure(text="Time List Was Pulled: " + self.pulled_time)
 
     def create_widgets(self):
         #
@@ -47,6 +55,8 @@ class DrugConsortiumRandomPuller:
         self.win.config(menu=menu_bar)
         file_menu = tk.Menu(menu_bar, tearoff=0)
         file_menu.add_command(label="Open", command=self.get_data_from_file)
+        file_menu.add_command(label="Save", command=self.save_output_to_file)
+        file_menu.add_separator()
         file_menu.add_command(label="Exit", command=self._quit)
         menu_bar.add_cascade(label="File", menu=file_menu)
 
