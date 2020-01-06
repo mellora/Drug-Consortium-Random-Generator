@@ -14,6 +14,7 @@ class main_window():
     def __init__(self):
         self.win = tk.Tk()
         self.win.title("Drug Consortium")
+        self.win.resizable(False, False)
         self.file_path = tk.StringVar()
         self.create_widgets()
 
@@ -33,19 +34,19 @@ class main_window():
         # Master LabelFrame for User Input for pulling
         #
         label_group_master = ttk.LabelFrame(self.win)
-        label_group_master.grid(column=0, row=0)
+        label_group_master.grid(column=0, row=0, sticky=tk.W)
 
         #
         # LabelFrame for pull config
         #
         label_group_pull_numbers = ttk.LabelFrame(label_group_master, text=" Config ")
-        label_group_pull_numbers.grid(column=0, row=0)
+        label_group_pull_numbers.grid(column=0, row=0, sticky=tk.W)
 
         #
         # LabelFrame for file path
         #
         label_group_file_path = ttk.LabelFrame(label_group_pull_numbers, text=" File Path ")
-        label_group_file_path.grid(column=0, row=0, columnspan=2)
+        label_group_file_path.grid(column=0, row=0, columnspan=2, sticky=tk.W)
         # Entry to type in file path
         self.entry_file_path = ttk.Entry(label_group_file_path, width=50, textvariable=self.file_path)
         self.entry_file_path.grid(column=0, row=0)
@@ -57,7 +58,7 @@ class main_window():
         # LabelFrame for Randoms
         #
         label_group_randoms = ttk.LabelFrame(label_group_pull_numbers, text=" Randoms ")
-        label_group_randoms.grid(column=0, row=1)
+        label_group_randoms.grid(column=0, row=1, sticky=tk.W)
         # Label
         ttk.Label(label_group_randoms, text="Number to pull:").grid(column=0, row=0)
         # Spinbox
@@ -68,12 +69,36 @@ class main_window():
         # LabelFrame for Alternates
         #
         label_group_alternates = ttk.LabelFrame(label_group_pull_numbers, text=" Alternates ")
-        label_group_alternates.grid(column=1, row=1)
+        label_group_alternates.grid(column=1, row=1, sticky=tk.W)
         # Label
         ttk.Label(label_group_alternates, text="Number to pull:").grid(column=0, row=0)
         # SpinBox
         self.spin_alternate = tk.Spinbox(label_group_alternates, from_=0, to=100)
         self.spin_alternate.grid(column=1, row=0)
+
+        #
+        # LabelFrame for output
+        #
+        label_group_output = ttk.LabelFrame(label_group_master, text=" Pulled Employees")
+        label_group_output.grid(column=0, row=1, sticky=tk.W)
+        # Random Pull Output
+        self.label_random = ttk.Label(label_group_output, text="Randoms Pulled")
+        self.label_random.grid(column=0, row=0)
+        # Alternate Pull Output
+        self.label_alternate = ttk.Label(label_group_output, text="Alternates Pulled")
+        self.label_alternate.grid(column=1, row=0)
+
+        #
+        # Set Label Padding
+        #
+        # for child in label_group_master.winfo_children():
+        #     child.grid_configure(padx=5)
+        # for child in label_group_output.winfo_children():
+        #     child.grid_configure(padx=5)
+        for group in label_group_master.winfo_children():
+            group.grid_configure(padx=5, pady=5)
+            for child in group.winfo_children():
+                child.grid_configure(padx=5, pady=5)
 
     def get_path(self):
         return self.file_path
