@@ -43,9 +43,9 @@ class DrugConsortiumRandomPuller:
         self.pulled_randoms = sampled_pop.iloc[:num_rand][0].values.tolist()
         self.pulled_alternates = sampled_pop.iloc[num_rand:][0].values.tolist()
         self.pulled_time = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
-        self.label_random.configure(text="Randoms Pulled:\n" + "\n".join(self.pulled_randoms))
-        self.label_alternate.configure(text="Alternates Pulled:\n" + "\n".join(self.pulled_alternates))
-        self.label_timestamp.configure(text="Time List Was Pulled: " + self.pulled_time)
+        # self.label_random.configure(text="Randoms Pulled:\n" + "\n".join(self.pulled_randoms))
+        # self.label_alternate.configure(text="Alternates Pulled:\n" + "\n".join(self.pulled_alternates))
+        # self.label_timestamp.configure(text="Time List Was Pulled: " + self.pulled_time)
 
     def create_widgets(self):
         #
@@ -98,22 +98,13 @@ class DrugConsortiumRandomPuller:
         # LabelFrame for output
         #
         label_group_output = ttk.LabelFrame(label_group_master, text=" Pulled Employees")
-        label_group_output.grid(column=0, row=1, sticky=tk.W)
+        label_group_output.grid(column=1, row=0, sticky=tk.W)
         # Pop Size Label
         self.label_pop_size = ttk.Label(label_group_output, text="")
         self.label_pop_size.grid(column=0, row=0, columnspan=2)
         # Button to pull randoms and alternates
         button_puller = ttk.Button(label_group_output, text="Pull Randoms", command=self.pull_randoms)
         button_puller.grid(column=0, row=1, columnspan=2)
-        # Random Pull Output
-        self.label_random = ttk.Label(label_group_output, text="Randoms Pulled")
-        self.label_random.grid(column=0, row=2)
-        # Alternate Pull Output
-        self.label_alternate = ttk.Label(label_group_output, text="Alternates Pulled")
-        self.label_alternate.grid(column=1, row=2)
-        # TImestamp Label
-        self.label_timestamp = ttk.Label(label_group_output, text="TIme List Was Pulled:")
-        self.label_timestamp.grid(column=0, row=3, columnspan=2)
 
         #
         # Set Label Padding
