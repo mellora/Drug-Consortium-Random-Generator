@@ -28,24 +28,67 @@ class DrugConsortiumRandomPuller:
 
     def save_output_to_file(self):
         file_save = os.path.normpath(filedialog.asksaveasfilename(initialdir=os.getcwd(), title="Save Pulled Population", filetypes=self.file_types, defaultextension=self.file_types))
-        test = ["LIST PULLED AT:", self.pulled_time, "\nRANDOMS PULLED:"] + self.pulled_randoms + ["\nALTERNATES PULLED:"] + self.pulled_alternates
-        with open(file_save, "w") as file:
-            file.writelines("%s\n" % line for line in test)
+        try:
+            test = ["LIST PULLED AT:", self.pulled_time, "\nRANDOMS PULLED:"] + self.pulled_randoms + ["\nALTERNATES PULLED:"] + self.pulled_alternates
+            with open(file_save, "w") as file:
+                file.writelines("%s\n" % line for line in test)
+        except:
+            pass
 
     def get_data_from_file(self):
-        self.file_data = pd.read_excel(os.path.normpath(filedialog.askopenfilename(initialdir=os.getcwd(), title="Select File", filetypes=(("Excel Files", "*.xlsx"), ("All Files", "*.*")))), header=None)
-        self.label_pop_size.configure(text=f"There Are {self.file_data.size} Employees in this list")
+        try:
+            self.file_data = pd.read_excel(os.path.normpath(filedialog.askopenfilename(initialdir=os.getcwd(), title="Select File", filetypes=(("Excel Files", "*.xlsx"), ("All Files", "*.*")))), header=None)
+            self.label_pop_size.configure(text=f"There Are {self.file_data.size} Employees in this list")
+        except:
+            pass
 
     def pull_randoms(self):
-        num_rand = int(self.spin_random.get())
-        num_alt = int(self.spin_alternate.get())
-        sampled_pop = self.file_data.sample(num_rand + num_alt)
-        self.pulled_randoms = sampled_pop.iloc[:num_rand][0].values.tolist()
-        self.pulled_alternates = sampled_pop.iloc[num_rand:][0].values.tolist()
-        self.pulled_time = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+        try:
+            num_rand = int(self.spin_random.get())
+            num_alt = int(self.spin_alternate.get())
+            sampled_pop = self.file_data.sample(num_rand + num_alt)
+            self.pulled_randoms = sampled_pop.iloc[:num_rand][0].values.tolist()
+            self.pulled_alternates = sampled_pop.iloc[num_rand:][0].values.tolist()
+            self.pulled_time = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+        except:
+            pass
         # self.label_random.configure(text="Randoms Pulled:\n" + "\n".join(self.pulled_randoms))
         # self.label_alternate.configure(text="Alternates Pulled:\n" + "\n".join(self.pulled_alternates))
         # self.label_timestamp.configure(text="Time List Was Pulled: " + self.pulled_time)
+        output_window = tk.Toplevel(self.win)
+        output_window.title("Results")
+        output_window.resizable(False, False)
+        def save_quit():
+            self.save_output_to_file()
+            output_window.quit()
+            output_window.destroy()
+        def redo():
+            output_window.quit()
+            output_window.destroy()
+        label_frame_output_master = tk.LabelFrame(output_window)
+        label_frame_output_master.grid(row=0, column=0)
+        label_frame_buttons = tk.LabelFrame(label_frame_output_master)
+        label_frame_buttons.grid(row=1, column=0)
+        label_frame_output = tk.LabelFrame(label_frame_output_master)
+        label_frame_output.grid(row=0, column=0)
+        label_frame_timestamp = tk.LabelFrame(label_frame_output, text=" Time Pulled ")
+        label_frame_timestamp.grid(row=0, column=0, columnspan=2, sticky=tk.N)
+        label_frame_random = tk.LabelFrame(label_frame_output, text=f" {len(self.pulled_randoms)} Randoms Pulled ")
+        label_frame_random.grid(row=1, column=0, sticky=tk.N)
+        label_frame_alternate = tk.LabelFrame(label_frame_output, text=f" {len(self.pulled_alternates)} Alternates Pulled ")
+        label_frame_alternate.grid(row=1, column=1, sticky=tk.N)
+        if len(self.pulled_randoms) > 0:
+            tk.Label(label_frame_timestamp, text=self.pulled_time).grid(row=0, column=0)
+            for x, person in enumerate(self.pulled_randoms):
+                ttk.Label(label_frame_random, text=person).grid(row=x, column=0, sticky=tk.W)
+        if len(self.pulled_alternates) > 0:
+            for x, person in enumerate(self.pulled_alternates):
+                ttk.Label(label_frame_alternate, text=person).grid(row=x, column=0, sticky=tk.W)
+        button_save_quit = ttk.Button(label_frame_buttons, text="Save and Exit", command=save_quit)
+        button_save_quit.grid(row=0, column=0)
+        button_redo = ttk.Button(label_frame_buttons, text="Redo", command=redo)
+        button_redo.grid(row=0, column=1)
+        output_window.mainloop()
 
     def create_widgets(self):
         #
