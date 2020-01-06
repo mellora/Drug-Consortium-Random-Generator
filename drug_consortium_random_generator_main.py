@@ -11,7 +11,7 @@ import random_puller
 os.chdir(os.path.normpath("D:/Spyder/DrugConsortiumData"))
 
 if __name__ == "__main__":
-    puller = RandomPuller.random_puller()
+    puller = random_puller.RandomPuller()
     puller.load_data(os.path.normpath("D:/Spyder/DrugConsortiumData/MOCK_DATA.xlsx"))
 
     print("There are", puller.get_population_size(), "entries in the population.")
