@@ -112,6 +112,8 @@ class DrugConsortiumRandomPuller:
             group.grid_configure(padx=5, pady=5)
             for child in group.winfo_children():
                 child.grid_configure(padx=5, pady=5)
+        for child in label_group_output.winfo_children():
+            child.grid_configure(sticky=tk.W+tk.N)
 
 if __name__ == "__main__":
     consortium_main = DrugConsortiumRandomPuller()
