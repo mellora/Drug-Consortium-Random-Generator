@@ -15,7 +15,11 @@ from datetime import datetime
 
 class DrugConsortiumRandomPuller:
     def __init__(self):
-        self.file_types = (("Text Document", "*.txt"), ("All Files", "*.*"))
+        #
+        # Initializes the required items for the program
+        #
+        self.file_types_save = (("Text Document", "*.txt"), ("All Files", "*.*"))
+        self.file_types_open = (("Excel Files", "*.xlsx"), ("All Files", "*.*"))
         self.win = tk.Tk()
         self.win.title("Drug Consortium")
         self.win.resizable(False, False)
@@ -28,7 +32,7 @@ class DrugConsortiumRandomPuller:
         exit()
 
     def save_output_to_file(self):
-        file_save = os.path.normpath(filedialog.asksaveasfilename(initialdir=os.getcwd(), title="Save Pulled Population", filetypes=self.file_types, defaultextension=self.file_types))
+        file_save = os.path.normpath(filedialog.asksaveasfilename(initialdir=os.getcwd(), title="Save Pulled Population", filetypes=self.file_types_save, defaultextension=self.file_types_save))
         try:
             test = ["LIST PULLED AT:", self.pulled_time, "\nRANDOMS PULLED:"] + self.pulled_randoms + ["\nALTERNATES PULLED:"] + self.pulled_alternates
             with open(file_save, "w") as file:
@@ -38,7 +42,7 @@ class DrugConsortiumRandomPuller:
 
     def get_data_from_file(self):
         try:
-            self.file_data = pd.read_excel(os.path.normpath(filedialog.askopenfilename(initialdir=os.getcwd(), title="Select File", filetypes=(("Excel Files", "*.xlsx"), ("All Files", "*.*")))), header=None)
+            self.file_data = pd.read_excel(os.path.normpath(filedialog.askopenfilename(initialdir=os.getcwd(), title="Select File", filetypes=self.file_types_open)), header=None)
             self.label_pop_size.configure(text=f"There Are {self.file_data.size} Employees in this list")
         except:
             pass
@@ -114,47 +118,47 @@ class DrugConsortiumRandomPuller:
         # Master LabelFrame for User Input for pulling
         #
         label_group_master = ttk.LabelFrame(self.win)
-        label_group_master.grid(column=0, row=0, sticky=tk.W+tk.N)
+        label_group_master.grid(row=0, column=0, sticky=tk.W+tk.N)
 
         #
         # LabelFrame for pull config
         #
         label_group_pull_numbers = ttk.LabelFrame(label_group_master, text=" Config ")
-        label_group_pull_numbers.grid(column=0, row=0, sticky=tk.W+tk.N)
+        label_group_pull_numbers.grid(row=0, column=0, sticky=tk.W+tk.N)
 
         #
         # LabelFrame for Randoms
         #
         label_group_randoms = ttk.LabelFrame(label_group_pull_numbers, text=" Randoms ")
-        label_group_randoms.grid(column=0, row=1, sticky=tk.W+tk.N)
+        label_group_randoms.grid(row=1, column=0, sticky=tk.W+tk.N)
         # Label
         ttk.Label(label_group_randoms, text="Number to pull:").grid(column=0, row=0)
         # Spinbox
         self.spin_random = tk.Spinbox(label_group_randoms, from_=0, to=100)
-        self.spin_random.grid(column=1, row=0)
+        self.spin_random.grid(row=0, column=1)
 
         #
         # LabelFrame for Alternates
         #
         label_group_alternates = ttk.LabelFrame(label_group_pull_numbers, text=" Alternates ")
-        label_group_alternates.grid(column=1, row=1, sticky=tk.W+tk.N)
+        label_group_alternates.grid(row=1, column=1, sticky=tk.W+tk.N)
         # Label
-        ttk.Label(label_group_alternates, text="Number to pull:").grid(column=0, row=0)
+        ttk.Label(label_group_alternates, text="Number to pull:").grid(row=0, column=0)
         # SpinBox
         self.spin_alternate = tk.Spinbox(label_group_alternates, from_=0, to=100)
-        self.spin_alternate.grid(column=1, row=0)
+        self.spin_alternate.grid(row=0, column=1)
 
         #
         # LabelFrame for output
         #
         label_group_output = ttk.LabelFrame(label_group_master, text=" Pulled Employees")
-        label_group_output.grid(column=1, row=0, sticky=tk.W+tk.N)
+        label_group_output.grid(row=0, column=1, sticky=tk.W+tk.N)
         # Pop Size Label
         self.label_pop_size = ttk.Label(label_group_output, text="Number of Employees")
-        self.label_pop_size.grid(column=0, row=0, columnspan=2)
+        self.label_pop_size.grid(row=0, column=0, columnspan=2)
         # Button to pull randoms and alternates
         button_puller = ttk.Button(label_group_output, text="Pull Randoms", command=self.pull_randoms)
-        button_puller.grid(column=0, row=1, columnspan=2)
+        button_puller.grid(row=1, column=0, columnspan=2)
 
         #
         # Set Label Padding
