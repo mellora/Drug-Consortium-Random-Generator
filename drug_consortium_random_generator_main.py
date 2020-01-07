@@ -12,27 +12,6 @@ import os
 import pandas as pd
 from datetime import datetime
 
-class ScrollableFrame(ttk.Frame):
-    def __init__(self, container, *args, **kwargs):
-        super().__init__(container, *args, **kwargs)
-        canvas = tk.Canvas(self)
-        scrollbar = ttk.Scrollbar(self, orient="vertical", command=canvas.yview)
-        self.scrollable_frame = ttk.Frame(canvas)
-
-        self.scrollable_frame.bind(
-            "<Configure>",
-            lambda e: canvas.configure(
-                scrollregion=canvas.bbox("all")
-            )
-        )
-
-        canvas.create_window((0, 0), window=self.scrollable_frame, anchor="nw")
-
-        canvas.configure(yscrollcommand=scrollbar.set)
-
-        canvas.pack(side="left", fill="both", expand=True)
-        scrollbar.pack(side="right", fill="y")
-
 class DrugConsortiumRandomPuller:
     def __init__(self):
         self.file_types = (("Text Document", "*.txt"), ("All Files", "*.*"))
@@ -100,8 +79,11 @@ class DrugConsortiumRandomPuller:
         label_frame_alternate.grid(row=1, column=1, sticky=tk.N)
         tk.Label(label_frame_timestamp, text=self.pulled_time).grid(row=0, column=0)
         if len(self.pulled_randoms) > 0:
+
+
+
             for x, person in enumerate(self.pulled_randoms):
-                ttk.Label(label_frame_random, text=person).grid(row=x, column=0, sticky=tk.W)
+                ttk.Label(label_frame_random, text=person).grid(row=x, column=0)
         if len(self.pulled_alternates) > 0:
             for x, person in enumerate(self.pulled_alternates):
                 ttk.Label(label_frame_alternate, text=person).grid(row=x, column=0, sticky=tk.W)
