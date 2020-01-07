@@ -8,30 +8,10 @@ Created on Fri Jan  3 10:59:28 2020
 import tkinter as tk
 from tkinter import ttk
 from tkinter import filedialog
+from tkinter import scrolledtext
 import os
 import pandas as pd
 from datetime import datetime
-
-class ScrollableFrame(ttk.Frame):
-    def __init__(self, container, *args, **kwargs):
-        super().__init__(container, *args, **kwargs)
-        canvas = tk.Canvas(self)
-        scrollbar = ttk.Scrollbar(self, orient="vertical", command=canvas.yview)
-        self.scrollable_frame = ttk.Frame(canvas)
-
-        self.scrollable_frame.bind(
-            "<Configure>",
-            lambda e: canvas.configure(
-                scrollregion=canvas.bbox("all")
-            )
-        )
-
-        canvas.create_window((0, 0), window=self.scrollable_frame, anchor="nw")
-
-        canvas.configure(yscrollcommand=scrollbar.set)
-
-        canvas.pack(side="left", fill="both", expand=True)
-        scrollbar.pack(side="right", fill="y")
 
 class DrugConsortiumRandomPuller:
     def __init__(self):
@@ -100,11 +80,17 @@ class DrugConsortiumRandomPuller:
         label_frame_alternate.grid(row=1, column=1, sticky=tk.N)
         tk.Label(label_frame_timestamp, text=self.pulled_time).grid(row=0, column=0)
         if len(self.pulled_randoms) > 0:
-            for x, person in enumerate(self.pulled_randoms):
-                ttk.Label(label_frame_random, text=person).grid(row=x, column=0, sticky=tk.W)
+            scrolled_text_rand = scrolledtext.ScrolledText(label_frame_random, wrap=tk.WORD, width=30, height=20)
+            scrolled_text_rand.grid(row=0, column=0)
+            for person in self.pulled_randoms:
+                scrolled_text_rand.insert(tk.INSERT, f"{person}\n")
+            scrolled_text_rand.configure(state=tk.DISABLED)
         if len(self.pulled_alternates) > 0:
-            for x, person in enumerate(self.pulled_alternates):
-                ttk.Label(label_frame_alternate, text=person).grid(row=x, column=0, sticky=tk.W)
+            scrolled_text_alt = scrolledtext.ScrolledText(label_frame_alternate, wrap=tk.WORD, width=30, height=20)
+            scrolled_text_alt.grid(row=0, column=0)
+            for person in self.pulled_alternates:
+                scrolled_text_alt.insert(tk.INSERT, f"{person}\n")
+            scrolled_text_alt.configure(state=tk.DISABLED)
         button_save_quit = ttk.Button(label_frame_buttons, text="Save and Exit", command=save_quit)
         button_save_quit.grid(row=0, column=0)
         button_redo = ttk.Button(label_frame_buttons, text="Redo", command=redo)
