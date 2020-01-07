@@ -77,8 +77,8 @@ class DrugConsortiumRandomPuller:
         label_frame_random.grid(row=1, column=0, sticky=tk.N)
         label_frame_alternate = tk.LabelFrame(label_frame_output, text=f" {len(self.pulled_alternates)} Alternates Pulled ")
         label_frame_alternate.grid(row=1, column=1, sticky=tk.N)
+        tk.Label(label_frame_timestamp, text=self.pulled_time).grid(row=0, column=0)
         if len(self.pulled_randoms) > 0:
-            tk.Label(label_frame_timestamp, text=self.pulled_time).grid(row=0, column=0)
             for x, person in enumerate(self.pulled_randoms):
                 ttk.Label(label_frame_random, text=person).grid(row=x, column=0, sticky=tk.W)
         if len(self.pulled_alternates) > 0:
