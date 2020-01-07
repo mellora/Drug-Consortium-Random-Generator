@@ -84,11 +84,13 @@ class DrugConsortiumRandomPuller:
             scrolled_text_rand.grid(row=0, column=0)
             for person in self.pulled_randoms:
                 scrolled_text_rand.insert(tk.INSERT, f"{person}\n")
+            scrolled_text_rand.configure(state=tk.DISABLED)
         if len(self.pulled_alternates) > 0:
             scrolled_text_alt = scrolledtext.ScrolledText(label_frame_alternate, wrap=tk.WORD, width=30, height=20)
             scrolled_text_alt.grid(row=0, column=0)
             for person in self.pulled_alternates:
                 scrolled_text_alt.insert(tk.INSERT, f"{person}\n")
+            scrolled_text_alt.configure(state=tk.DISABLED)
         button_save_quit = ttk.Button(label_frame_buttons, text="Save and Exit", command=save_quit)
         button_save_quit.grid(row=0, column=0)
         button_redo = ttk.Button(label_frame_buttons, text="Redo", command=redo)
